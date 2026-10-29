@@ -177,76 +177,56 @@ function renderCart(products) {
     document.querySelector('#cart-total').textContent = currency.format(total);
     document.querySelector('#checkout-button').disabled = entries.length === 0;
 
-    if (itemsElement.dataset.listenerAttached !== 'true') {
-        itemsElement.dataset.listenerAttached = 'true';
-        itemsElement.addEventListener('click', (event) => {
-            const removeButton = event.target.closest('[data-remove]');
-            const quantityButton = event.target.closest('[data-quantity]');
-            const updatedCart = readCart();
+    itemsElement.onclick = (event) => {
+        const removeButton = event.target.closest('[data-remove]');
+        const quantityButton = event.target.closest('[data-quantity]');
+        const updatedCart = readCart();
 
-            if (removeButton) {
-                delete updatedCart[removeButton.dataset.remove];
-            } else if (quantityButton) {
-                const id = quantityButton.dataset.quantity;
-                updatedCart[id] += Number(quantityButton.dataset.change);
-                if (updatedCart[id] <= 0) delete updatedCart[id];
-            } else {
-                return;
-            }
+        if (removeButton) {
+            delete updatedCart[removeButton.dataset.remove];
+        } else if (quantityButton) {
+            const id = quantityButton.dataset.quantity;
+            updatedCart[id] += Number(quantityButton.dataset.change);
+            if (updatedCart[id] <= 0) delete updatedCart[id];
+        } else {
+            return;
+        }
 
-            saveCart(updatedCart);
-            renderCart(products);
-        });
-    }
+        saveCart(updatedCart);
+        renderCart(products);
+    };
 
     const checkoutButton = document.querySelector('#checkout-button');
-    if (checkoutButton.dataset.listenerAttached !== 'true') {
-        checkoutButton.dataset.listenerAttached = 'true';
-        checkoutButton.addEventListener('click', () => {
-            const checkoutForm = document.querySelector('#checkout-form');
-            checkoutForm.hidden = false;
-            checkoutButton.hidden = true;
-            checkoutForm.querySelector('input').focus();
-        });
-    }
-
     const checkoutForm = document.querySelector('#checkout-form');
-    if (checkoutForm.dataset.listenerAttached !== 'true') {
-        checkoutForm.dataset.listenerAttached = 'true';
-        checkoutForm.addEventListener('submit', (event) => {
-            event.preventDefault();
-            const currentCart = readCart();
-            const currentEntries = Object.entries(currentCart).filter(([id]) => productById.has(id));
-            if (currentEntries.length === 0) {
-                showStatus(status, 'Кошик порожній — додайте товари перед оформленням.', true);
-                return;
-            }
-
-            const formData = new FormData(checkoutForm);
-            const customerName = formData.get('name').trim();
-            const orderId = `DEMO-${Date.now().toString().slice(-6)}`;
-            const orderTotal = currentEntries.reduce((sum, [id, quantity]) => {
-                return sum + productById.get(id).price * quantity;
-            }, 0);
-
-            document.querySelector('#success-name').textContent = customerName;
-            document.querySelector('#success-message').textContent =
-                `Демо-замовлення ${orderId} на суму ${currency.format(orderTotal)} створено.`;
-            document.querySelector('#checkout-success').hidden = false;
-            document.querySelector('.cart-layout').hidden = true;
-            saveCart({});
-        });
-    }
-
     const cancelButton = document.querySelector('#checkout-cancel');
-    if (cancelButton.dataset.listenerAttached !== 'true') {
-        cancelButton.dataset.listenerAttached = 'true';
-        cancelButton.addEventListener('click', () => {
-            checkoutForm.reset();
-            checkoutForm.hidden = true;
-            checkoutButton.hidden = false;
-        });
-    }
+
+    checkoutButton.onclick = () => {
+        checkoutForm.hidden = false;
+        checkoutButton.hidden = true;
+    };
+
+    checkoutForm.onsubmit = (event) => {
+        event.preventDefault();
+
+        if (entries.length === 0) {
+            showStatus(status, 'Кошик порожній — додайте товари перед оформленням.', true);
+            return;
+        }
+
+        const customerName = checkoutForm.elements.name.value.trim();
+        document.querySelector('#success-name').textContent = customerName;
+        document.querySelector('#success-message').textContent =
+            `Ваше замовлення на суму ${currency.format(total)} оформлено.`;
+        document.querySelector('#checkout-success').hidden = false;
+        document.querySelector('.cart-layout').hidden = true;
+        saveCart({});
+    };
+
+    cancelButton.onclick = () => {
+        checkoutForm.reset();
+        checkoutForm.hidden = true;
+        checkoutButton.hidden = false;
+    };
 }
 
 async function initializeStore() {
