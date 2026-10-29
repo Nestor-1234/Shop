@@ -40,9 +40,37 @@
                 <div class="summary-row"><span>Доставка</span><span>Безкоштовно</span></div>
                 <div class="summary-total"><span>Разом</span><span id="cart-total">0 ₴</span></div>
                 <button class="button button-dark checkout-button" id="checkout-button" type="button">Оформити замовлення <span aria-hidden="true">→</span></button>
-                <p class="summary-note">Оформлення замовлення — демонстраційне, оплата не проводиться.</p>
+                <form class="checkout-form" id="checkout-form" hidden>
+                    <p class="checkout-form-title">Контактні дані для замовлення</p>
+                    <label class="checkout-field">
+                        <span>Ім'я та прізвище</span>
+                        <input name="name" type="text" autocomplete="name" required>
+                    </label>
+                    <label class="checkout-field">
+                        <span>Телефон</span>
+                        <input name="phone" type="tel" autocomplete="tel" placeholder="+380..." required>
+                    </label>
+                    <label class="checkout-field">
+                        <span>Місто</span>
+                        <input name="city" type="text" autocomplete="address-level2" required>
+                    </label>
+                    <label class="checkout-field">
+                        <span>Адреса або номер відділення</span>
+                        <input name="address" type="text" autocomplete="street-address" required>
+                    </label>
+                    <p class="checkout-form-note">Демо-замовлення: дані залишаються у вашому браузері лише до відправлення форми й нікуди не надсилаються. Оплата не проводиться.</p>
+                    <button class="button button-dark checkout-submit" type="submit">Підтвердити замовлення</button>
+                    <button class="checkout-cancel" id="checkout-cancel" type="button">Повернутися до кошика</button>
+                </form>
             </aside>
         </div>
+        <section class="checkout-success" id="checkout-success" role="status" aria-live="polite" hidden>
+            <span class="success-mark" aria-hidden="true">✓</span>
+            <p class="eyebrow">Замовлення оформлено</p>
+            <h2>Дякуємо, <span id="success-name"></span>!</h2>
+            <p id="success-message"></p>
+            <a class="button button-dark" href="index.html#catalog">Повернутися до каталогу <span aria-hidden="true">→</span></a>
+        </section>
     </main>
 
     <footer class="site-footer">

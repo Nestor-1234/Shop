@@ -203,7 +203,48 @@ function renderCart(products) {
     if (checkoutButton.dataset.listenerAttached !== 'true') {
         checkoutButton.dataset.listenerAttached = 'true';
         checkoutButton.addEventListener('click', () => {
-            showStatus(status, 'Дякуємо! Це демонстраційне замовлення — кошик залишився без змін.');
+            const checkoutForm = document.querySelector('#checkout-form');
+            checkoutForm.hidden = false;
+            checkoutButton.hidden = true;
+            checkoutForm.querySelector('input').focus();
+        });
+    }
+
+    const checkoutForm = document.querySelector('#checkout-form');
+    if (checkoutForm.dataset.listenerAttached !== 'true') {
+        checkoutForm.dataset.listenerAttached = 'true';
+        checkoutForm.addEventListener('submit', (event) => {
+            event.preventDefault();
+            const currentCart = readCart();
+            const currentEntries = Object.entries(currentCart).filter(([id]) => productById.has(id));
+            if (currentEntries.length === 0) {
+                showStatus(status, 'Кошик порожній — додайте товари перед оформленням.', true);
+                return;
+            }
+
+            const formData = new FormData(checkoutForm);
+            const customerName = formData.get('name').trim();
+            const orderId = `DEMO-${Date.now().toString().slice(-6)}`;
+            const orderTotal = currentEntries.reduce((sum, [id, quantity]) => {
+                return sum + productById.get(id).price * quantity;
+            }, 0);
+
+            document.querySelector('#success-name').textContent = customerName;
+            document.querySelector('#success-message').textContent =
+                `Демо-замовлення ${orderId} на суму ${currency.format(orderTotal)} створено.`;
+            document.querySelector('#checkout-success').hidden = false;
+            document.querySelector('.cart-layout').hidden = true;
+            saveCart({});
+        });
+    }
+
+    const cancelButton = document.querySelector('#checkout-cancel');
+    if (cancelButton.dataset.listenerAttached !== 'true') {
+        cancelButton.dataset.listenerAttached = 'true';
+        cancelButton.addEventListener('click', () => {
+            checkoutForm.reset();
+            checkoutForm.hidden = true;
+            checkoutButton.hidden = false;
         });
     }
 }
