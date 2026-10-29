@@ -31,6 +31,31 @@ function updateCartCount(cart) {
     });
 }
 
+function renderProductCartActions(product, quantity) {
+    if (quantity > 0) {
+        return `
+            <div class="product-cart-actions is-added" data-product-cart-actions="${product.id}"
+                aria-live="polite" aria-atomic="true">
+                <span class="added-label">Додано ✓</span>
+                <div class="quantity-control" aria-label="Кількість ${product.title}: ${quantity}">
+                    <button class="quantity-button" type="button" data-cart-change="${product.id}"
+                        data-change="-1" aria-label="Зменшити кількість ${product.title}">−</button>
+                    <span data-product-quantity>${quantity}</span>
+                    <button class="quantity-button" type="button" data-cart-change="${product.id}"
+                        data-change="1" aria-label="Збільшити кількість ${product.title}">+</button>
+                </div>
+            </div>
+        `;
+    }
+
+    return `
+        <div class="product-cart-actions" data-product-cart-actions="${product.id}">
+            <button class="add-button" type="button" data-add-to-cart="${product.id}"
+                aria-label="Додати ${product.title} до кошика">Додати в кошик</button>
+        </div>
+    `;
+}
+
 function showStatus(element, message, isError = false) {
     if (!element) return;
     element.textContent = message;
@@ -54,6 +79,7 @@ function renderCatalog(products) {
     const filters = document.querySelector('#category-filters');
     const sort = document.querySelector('#product-sort');
     const status = document.querySelector('#catalog-status');
+    const productDialog = document.querySelector('#product-dialog');
     let activeCategory = 'Усі';
     const categories = ['Усі', ...new Set(products.map((product) => product.category))];
 
@@ -77,19 +103,22 @@ function renderCatalog(products) {
         if (sort.value === 'price-desc') visibleProducts.sort((a, b) => b.price - a.price);
         if (sort.value === 'name') visibleProducts.sort((a, b) => a.title.localeCompare(b.title, 'uk'));
 
+        const cart = readCart();
         grid.innerHTML = visibleProducts.map((product) => `
-            <article class="product-card">
-                <div class="product-art" aria-hidden="true">
-                    <span class="product-icon">${product.image}</span>
+            <article class="product-card" data-product-card="${product.id}">
+                <div class="product-image">
+                    <button class="product-image-button" type="button" data-product-details="${product.id}"
+                        aria-label="Переглянути фото й опис ${product.title}">
+                        <img src="${product.image}" alt="${product.title}" loading="lazy">
+                    </button>
                     <span class="product-category">${product.category}</span>
                 </div>
                 <div class="product-info">
-                    <h3>${product.title}</h3>
-                    <p>${product.description}</p>
+                    <h3 class="product-name">${product.title}</h3>
+                    <p class="product-description">${product.description}</p>
                     <div class="product-bottom">
-                        <strong>${currency.format(product.price)}</strong>
-                        <button class="add-button" type="button" data-add-to-cart="${product.id}"
-                            aria-label="Додати ${product.title} до кошика">+</button>
+                        <strong class="product-price">${currency.format(product.price)}</strong>
+                        ${renderProductCartActions(product, cart[product.id] || 0)}
                     </div>
                 </div>
             </article>
@@ -116,14 +145,54 @@ function renderCatalog(products) {
     search.addEventListener('input', updateProducts);
     sort.addEventListener('change', updateProducts);
     grid.addEventListener('click', (event) => {
-        const button = event.target.closest('[data-add-to-cart]');
-        if (!button) return;
-        const cart = readCart();
-        const productId = button.dataset.addToCart;
-        cart[productId] = (cart[productId] || 0) + 1;
-        saveCart(cart);
-        button.textContent = '✓';
-        window.setTimeout(() => { button.textContent = '+'; }, 900);
+        const quantityButton = event.target.closest('[data-cart-change]');
+        const addButton = event.target.closest('[data-add-to-cart]');
+        if (quantityButton || addButton) {
+            const productId = quantityButton
+                ? quantityButton.dataset.cartChange
+                : addButton.dataset.addToCart;
+            const product = products.find((item) => String(item.id) === productId);
+            if (!product) return;
+
+            const cart = readCart();
+            const nextQuantity = (cart[productId] || 0) + (
+                quantityButton ? Number(quantityButton.dataset.change) : 1
+            );
+            if (nextQuantity > 0) {
+                cart[productId] = nextQuantity;
+            } else {
+                delete cart[productId];
+            }
+
+            saveCart(cart);
+            grid.querySelector(`[data-product-cart-actions="${productId}"]`).outerHTML =
+                renderProductCartActions(product, nextQuantity);
+            return;
+        }
+
+        const detailsButton = event.target.closest('[data-product-details]');
+        if (detailsButton) {
+            const product = products.find((item) => String(item.id) === detailsButton.dataset.productDetails);
+            if (!product) return;
+
+            const dialogImage = productDialog.querySelector('#product-dialog-image');
+            dialogImage.src = product.image;
+            dialogImage.alt = product.title;
+            productDialog.querySelector('#product-dialog-category').textContent = product.category;
+            productDialog.querySelector('#product-dialog-title').textContent = product.title;
+            productDialog.querySelector('#product-dialog-description').textContent = product.description;
+            productDialog.querySelector('#product-dialog-details').textContent = product.details;
+            productDialog.querySelector('#product-dialog-price').textContent = currency.format(product.price);
+            productDialog.showModal();
+            return;
+        }
+    });
+
+    productDialog.querySelector('.product-dialog-close').addEventListener('click', () => {
+        productDialog.close();
+    });
+    productDialog.addEventListener('click', (event) => {
+        if (event.target === productDialog) productDialog.close();
     });
 
     updateProducts();
@@ -147,7 +216,9 @@ function renderCart(products) {
         const product = productById.get(id);
         return `
             <article class="cart-item">
-                <div class="cart-item-art" aria-hidden="true">${product.image}</div>
+                <div class="cart-item-art" aria-hidden="true">
+                    <img src="${product.image}" alt="" loading="lazy">
+                </div>
                 <div class="cart-item-details">
                     <span class="product-category">${product.category}</span>
                     <h2>${product.title}</h2>
