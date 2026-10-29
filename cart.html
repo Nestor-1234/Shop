@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Ваш кошик у магазині музичних інструментів Мелодія.">
+    <title>Кошик — Мелодія</title>
+    <link rel="stylesheet" href="style.CSS">
+    <script src="script.js" defer></script>
+</head>
+<body>
+    <header class="site-header">
+        <a class="brand" href="index.html" aria-label="Мелодія — на головну">
+            <span class="brand-mark" aria-hidden="true">♫</span>
+            <span>мелодія</span>
+        </a>
+        <nav class="main-nav" aria-label="Головна навігація">
+            <a href="index.html#catalog">Каталог</a>
+            <a href="index.html#about">Про нас</a>
+        </nav>
+        <a class="cart-link is-current" href="cart.html" aria-current="page">
+            Кошик <span class="cart-count" data-cart-count>0</span>
+        </a>
+    </header>
+
+    <main class="cart-page section-wrap">
+        <a class="back-link" href="index.html#catalog">← Продовжити покупки</a>
+        <div class="section-heading cart-heading">
+            <div>
+                <p class="eyebrow">Усе готово до нового звучання</p>
+                <h1>Ваш кошик</h1>
+            </div>
+        </div>
+        <p class="status-message" id="cart-status" role="status" hidden></p>
+        <div class="cart-layout">
+            <div class="cart-items" id="cart-items" aria-live="polite"></div>
+            <aside class="cart-summary" id="cart-summary">
+                <p class="eyebrow">Ваше замовлення</p>
+                <div class="summary-row"><span>Товари</span><span id="cart-subtotal">0 ₴</span></div>
+                <div class="summary-row"><span>Доставка</span><span>Безкоштовно</span></div>
+                <div class="summary-total"><span>Разом</span><span id="cart-total">0 ₴</span></div>
+                <button class="button button-dark checkout-button" id="checkout-button" type="button">Оформити замовлення <span aria-hidden="true">→</span></button>
+                <p class="summary-note">Оформлення замовлення — демонстраційне, оплата не проводиться.</p>
+            </aside>
+        </div>
+    </main>
+
+    <footer class="site-footer">
+        <a class="brand brand-footer" href="index.html"><span class="brand-mark" aria-hidden="true">♫</span><span>мелодія</span></a>
+        <p>Магазин музичних інструментів</p>
+        <span>© 2026 Мелодія</span>
+    </footer>
+</body>
+</html>

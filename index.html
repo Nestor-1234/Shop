@@ -1,25 +1,83 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="uk">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <link rel="stylesheet" href="style.css">
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-66BSQ49Z5W"></script>
-    <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-
-    gtag('config', 'G-66BSQ49Z5W');
-    </script>
+    <meta name="description" content="Музичні інструменти та все для натхненної гри.">
+    <title>Мелодія — музичні інструменти</title>
+    <link rel="stylesheet" href="style.CSS">
+    <script src="script.js" defer></script>
 </head>
 <body>
-<h1>My Website</h1>
-<button class="btn ">Click Me</button>
+    <header class="site-header">
+        <a class="brand" href="index.html" aria-label="Мелодія — на головну">
+            <span class="brand-mark" aria-hidden="true">♫</span>
+            <span>мелодія</span>
+        </a>
+        <nav class="main-nav" aria-label="Головна навігація">
+            <a href="#catalog">Каталог</a>
+            <a href="#about">Про нас</a>
+        </nav>
+        <a class="cart-link" href="cart.html">
+            Кошик <span class="cart-count" data-cart-count>0</span>
+        </a>
+    </header>
 
+    <main>
+        <section class="hero">
+            <div class="hero-content">
+                <p class="eyebrow">Знайди свій звук</p>
+                <h1>Твоя музика<br>починається тут.</h1>
+                <p class="hero-copy">Інструменти для перших акордів і великих сцен — обирай те, що надихає.</p>
+                <a class="button button-light" href="#catalog">Переглянути каталог <span aria-hidden="true">↘</span></a>
+            </div>
+            <div class="hero-art" aria-hidden="true">
+                <span class="hero-note">♫</span>
+                <span class="hero-orbit"></span>
+                <span class="hero-caption">PLAY<br>YOUR<br>WAY</span>
+            </div>
+            <span class="hero-index" aria-hidden="true">01 / 04</span>
+        </section>
 
-    <script src="script.js"></script>
+        <section class="catalog section-wrap" id="catalog">
+            <div class="section-heading">
+                <div>
+                    <p class="eyebrow">Обирай свій інструмент</p>
+                    <h2>Каталог</h2>
+                </div>
+                <label class="search-box">
+                    <span class="visually-hidden">Пошук інструментів</span>
+                    <input id="product-search" type="search" placeholder="Знайти інструмент..." autocomplete="off">
+                    <span aria-hidden="true">⌕</span>
+                </label>
+            </div>
+            <div class="catalog-toolbar">
+                <div class="category-filters" id="category-filters" aria-label="Фільтр за категорією"></div>
+                <label class="sort-control">
+                    <span>Сортування</span>
+                    <select id="product-sort" aria-label="Сортування товарів">
+                        <option value="popular">За замовчуванням</option>
+                        <option value="price-asc">Спочатку дешевші</option>
+                        <option value="price-desc">Спочатку дорожчі</option>
+                        <option value="name">За назвою</option>
+                    </select>
+                </label>
+            </div>
+            <p class="status-message" id="catalog-status" role="status" hidden></p>
+            <div class="product-grid" id="product-grid" aria-live="polite"></div>
+        </section>
+
+        <section class="about section-wrap" id="about">
+            <p class="eyebrow">Музика — це для кожного</p>
+            <h2>Знайди інструмент,<br>який звучить як ти.</h2>
+            <p>Підбираємо інструменти для музикантів будь-якого рівня. Почни свою історію сьогодні.</p>
+        </section>
+    </main>
+
+    <footer class="site-footer">
+        <a class="brand brand-footer" href="index.html"><span class="brand-mark" aria-hidden="true">♫</span><span>мелодія</span></a>
+        <p>Магазин музичних інструментів</p>
+        <span>© 2026 Мелодія</span>
+    </footer>
 </body>
 </html>
