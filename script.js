@@ -1,4 +1,6 @@
 const CART_KEY = 'melodiya-cart';
+const FAVORITES_KEY = 'melodiya-favorites';
+const FAVORITES_FILTER = 'Обране';
 const currency = new Intl.NumberFormat('uk-UA', {
     style: 'currency',
     currency: 'UAH',
@@ -22,6 +24,23 @@ function readCart() {
 function saveCart(cart) {
     localStorage.setItem(CART_KEY, JSON.stringify(cart));
     updateCartCount(cart);
+}
+
+function readFavorites() {
+    const savedFavorites = localStorage.getItem(FAVORITES_KEY);
+    if (!savedFavorites) return [];
+
+    const parsedFavorites = JSON.parse(savedFavorites);
+    if (!Array.isArray(parsedFavorites) ||
+        !parsedFavorites.every((id) => typeof id === 'string' || typeof id === 'number')) {
+        throw new Error('Некоректний формат обраного у сховищі браузера.');
+    }
+
+    return [...new Set(parsedFavorites.map(String))];
+}
+
+function saveFavorites(favorites) {
+    localStorage.setItem(FAVORITES_KEY, JSON.stringify(favorites));
 }
 
 function updateCartCount(cart) {
@@ -81,7 +100,7 @@ function renderCatalog(products) {
     const status = document.querySelector('#catalog-status');
     const productDialog = document.querySelector('#product-dialog');
     let activeCategory = 'Усі';
-    const categories = ['Усі', ...new Set(products.map((product) => product.category))];
+    const categories = ['Усі', ...new Set(products.map((product) => product.category)), FAVORITES_FILTER];
 
     filters.innerHTML = categories.map((category) => `
         <button class="filter-chip${category === activeCategory ? ' is-active' : ''}"
@@ -92,8 +111,12 @@ function renderCatalog(products) {
 
     function updateProducts() {
         const query = search.value.trim().toLocaleLowerCase('uk');
+        const favorites = new Set(readFavorites());
         let visibleProducts = products.filter((product) => {
-            const matchesCategory = activeCategory === 'Усі' || product.category === activeCategory;
+            const matchesCategory = activeCategory === 'Усі' ||
+                (activeCategory === FAVORITES_FILTER
+                    ? favorites.has(String(product.id))
+                    : product.category === activeCategory);
             const matchesSearch = `${product.title} ${product.category} ${product.description}`
                 .toLocaleLowerCase('uk').includes(query);
             return matchesCategory && matchesSearch;
@@ -107,6 +130,10 @@ function renderCatalog(products) {
         const renderProductCard = (product) => `
             <article class="product-card" data-product-card="${product.id}">
                 <div class="product-image">
+                    <button class="favorite-button${favorites.has(String(product.id)) ? ' is-favorite' : ''}"
+                        type="button" data-favorite="${product.id}"
+                        aria-label="${favorites.has(String(product.id)) ? 'Вилучити' : 'Додати'} ${product.title} ${FAVORITES_FILTER.toLocaleLowerCase('uk')}"
+                        aria-pressed="${favorites.has(String(product.id))}">${favorites.has(String(product.id)) ? '♥' : '♡'}</button>
                     <div class="product-image-button" aria-label="Фото ${product.title}">
                         <img src="${product.image}" alt="${product.title}" loading="lazy">
                     </div>
@@ -157,7 +184,9 @@ function renderCatalog(products) {
         }
 
         if (visibleProducts.length === 0) {
-            showStatus(status, 'За вашим запитом нічого не знайдено.');
+            showStatus(status, activeCategory === FAVORITES_FILTER
+                ? 'В обраному поки немає товарів.'
+                : 'За вашим запитом нічого не знайдено.');
         } else {
             status.hidden = true;
         }
@@ -177,6 +206,20 @@ function renderCatalog(products) {
     search.addEventListener('input', updateProducts);
     sort.addEventListener('change', updateProducts);
     grid.addEventListener('click', (event) => {
+        const favoriteButton = event.target.closest('[data-favorite]');
+        if (favoriteButton) {
+            const productId = favoriteButton.dataset.favorite;
+            const favorites = new Set(readFavorites());
+            if (favorites.has(productId)) {
+                favorites.delete(productId);
+            } else {
+                favorites.add(productId);
+            }
+            saveFavorites([...favorites]);
+            updateProducts();
+            return;
+        }
+
         const quantityButton = event.target.closest('[data-cart-change]');
         const addButton = event.target.closest('[data-add-to-cart]');
         if (quantityButton || addButton) {
@@ -322,6 +365,7 @@ async function initializeStore() {
     const status = document.querySelector('#catalog-status') || document.querySelector('#cart-status');
     try {
         const cart = readCart();
+        readFavorites();
         updateCartCount(cart);
         const products = await loadProducts();
         renderCatalog(products);
