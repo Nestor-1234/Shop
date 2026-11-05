@@ -142,6 +142,67 @@ nav a:hover {
     background: var(--lime-hover);
 }
 
+.brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--dark);
+    font-size: 1.7rem;
+    font-weight: 700;
+    letter-spacing: -0.08em;
+}
+
+.brand-mark {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 34px;
+    height: 34px;
+    border-radius: 10px;
+    background: var(--lime);
+    color: var(--dark);
+    font-size: 18px;
+    line-height: 1;
+}
+
+.main-nav {
+    display: flex;
+    align-items: center;
+    gap: 28px;
+}
+
+.main-nav a {
+    color: var(--dark);
+    font-size: 0.95rem;
+    font-weight: 600;
+}
+
+.is-current {
+    background: #eaf3bf;
+}
+
+.button,
+.button-dark {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 14px 20px;
+    border: none;
+    border-radius: 12px;
+    background: var(--green);
+    color: var(--white);
+    font-weight: 700;
+    line-height: 1.2;
+    transition: transform 0.2s ease, background 0.2s ease;
+}
+
+.button:hover,
+.button-dark:hover {
+    background: var(--green-light);
+    transform: translateY(-1px);
+}
+
 /* ========================================
    3. ГОЛОВНИЙ БАНЕР
 ======================================== */
@@ -522,13 +583,46 @@ select {
    8. СТОРІНКА КОШИКА
 ======================================== */
 
-.cart-section {
+.cart-page {
+    width: min(88%, 1200px);
+    margin: 48px auto 90px;
+}
+
+.back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 20px;
+    color: var(--green);
+    font-size: 0.95rem;
+    font-weight: 600;
+}
+
+.back-link:hover {
+    text-decoration: underline;
+}
+
+.cart-heading {
+    width: 100%;
+    margin: 0 0 18px;
+    display: block;
+}
+
+.cart-heading h1 {
+    margin-bottom: 0;
+    font-size: clamp(34px, 4vw, 52px);
+    letter-spacing: -0.08em;
+}
+
+.cart-section,
+.cart-page {
     width: 88%;
     max-width: 1200px;
     margin: 55px auto 90px;
 }
 
-.cart-section h1 {
+.cart-section h1,
+.cart-page h1 {
     margin-bottom: 8px;
     font-size: clamp(32px, 4vw, 48px);
     letter-spacing: -2px;
@@ -751,6 +845,71 @@ select {
     transform: translateY(-2px);
 }
 
+.checkout-form {
+    display: grid;
+    gap: 16px;
+    margin-top: 24px;
+    padding-top: 20px;
+    border-top: 1px solid var(--border);
+}
+
+.checkout-form-title {
+    margin-bottom: 4px;
+    font-size: 1.05rem;
+    font-weight: 700;
+}
+
+.checkout-field {
+    display: grid;
+    gap: 8px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--dark);
+}
+
+.checkout-field input {
+    width: 100%;
+    padding: 13px 14px;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    background: #f9faf6;
+    color: var(--dark);
+    font: inherit;
+}
+
+.checkout-field input:focus {
+    border-color: var(--green);
+    outline: none;
+    box-shadow: 0 0 0 4px rgba(37, 55, 47, 0.08);
+}
+
+.checkout-form-note {
+    color: var(--gray);
+    font-size: 0.8rem;
+    line-height: 1.5;
+}
+
+.checkout-submit,
+.checkout-cancel {
+    width: 100%;
+    margin-top: 4px;
+    padding: 13px 16px;
+    border: none;
+    border-radius: 12px;
+    font-weight: 700;
+}
+
+.checkout-submit {
+    background: var(--green);
+    color: var(--white);
+}
+
+.checkout-cancel {
+    background: transparent;
+    color: var(--gray);
+    border: 1px solid var(--border);
+}
+
 .continue-shopping {
     display: inline-block;
     margin-top: 20px;
@@ -771,7 +930,7 @@ select {
     padding: 55px 25px;
     border: 1px dashed #d8dbd0;
     border-radius: 22px;
-    background: var(--white);
+    background: linear-gradient(180deg, #ffffff 0%, #f6f7f2 100%);
     text-align: center;
 }
 
@@ -782,6 +941,41 @@ select {
 
 .empty-cart p {
     margin-bottom: 22px;
+    color: var(--gray);
+}
+
+.checkout-success {
+    width: min(90%, 720px);
+    margin: 0 auto 40px;
+    padding: 40px 30px;
+    border: 1px solid #dfe8c7;
+    border-radius: 24px;
+    background: linear-gradient(180deg, #f8fbef 0%, #f1f5eb 100%);
+    text-align: center;
+}
+
+.success-mark {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 64px;
+    height: 64px;
+    margin-bottom: 18px;
+    border-radius: 50%;
+    background: var(--lime);
+    color: var(--dark);
+    font-size: 2rem;
+    font-weight: 700;
+}
+
+.checkout-success h2 {
+    margin-bottom: 12px;
+    font-size: clamp(30px, 4vw, 42px);
+    letter-spacing: -0.06em;
+}
+
+.checkout-success p {
+    margin-bottom: 20px;
     color: var(--gray);
 }
 
