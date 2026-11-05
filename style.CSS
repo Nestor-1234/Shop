@@ -439,7 +439,7 @@ select {
 #products-grid,
 #catalog-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 260px));
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 240px));
     justify-content: center;
     align-items: stretch;
     gap: 22px;
@@ -462,8 +462,12 @@ select {
 }
 
 .product-category-grid {
+    width: 100%;
+    max-width: 764px;
+    margin: 0 auto;
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), min(100%, 240px)));
+    justify-content: center;
     align-items: stretch;
     gap: 22px;
 }
