@@ -104,14 +104,13 @@ function renderCatalog(products) {
         if (sort.value === 'name') visibleProducts.sort((a, b) => a.title.localeCompare(b.title, 'uk'));
 
         const cart = readCart();
-        grid.innerHTML = visibleProducts.map((product) => `
+        const renderProductCard = (product) => `
             <article class="product-card" data-product-card="${product.id}">
                 <div class="product-image">
                     <button class="product-image-button" type="button" data-product-details="${product.id}"
                         aria-label="Переглянути фото й опис ${product.title}">
                         <img src="${product.image}" alt="${product.title}" loading="lazy">
                     </button>
-                    <span class="product-category">${product.category}</span>
                 </div>
                 <div class="product-info">
                     <h3 class="product-name">${product.title}</h3>
@@ -122,7 +121,41 @@ function renderCatalog(products) {
                     </div>
                 </div>
             </article>
-        `).join('');
+        `;
+
+        if (activeCategory === 'Усі') {
+            const groupNames = ['Гітари', 'Клавішні', 'Ударні', 'Аксесуари'];
+            const getGroupName = (category) => {
+                const normalizedCategory = category.toLocaleLowerCase('uk');
+                if (normalizedCategory.includes('гітар')) return 'Гітари';
+                if (normalizedCategory.includes('клавіш')) return 'Клавішні';
+                if (normalizedCategory.includes('ударн')) return 'Ударні';
+                if (normalizedCategory.includes('аксесуар')) return 'Аксесуари';
+                return category;
+            };
+            const groupedProducts = new Map();
+
+            visibleProducts.forEach((product) => {
+                const groupName = getGroupName(product.category);
+                if (!groupedProducts.has(groupName)) groupedProducts.set(groupName, []);
+                groupedProducts.get(groupName).push(product);
+            });
+
+            const orderedGroups = [
+                ...groupNames.filter((groupName) => groupedProducts.has(groupName)),
+                ...[...groupedProducts.keys()].filter((groupName) => !groupNames.includes(groupName))
+            ];
+            grid.innerHTML = orderedGroups.map((groupName) => `
+                <section class="product-category-row" aria-label="${groupName}">
+                    <h3>${groupName}</h3>
+                    <div class="product-category-grid">
+                        ${groupedProducts.get(groupName).map(renderProductCard).join('')}
+                    </div>
+                </section>
+            `).join('');
+        } else {
+            grid.innerHTML = visibleProducts.map(renderProductCard).join('');
+        }
 
         if (visibleProducts.length === 0) {
             showStatus(status, 'За вашим запитом нічого не знайдено.');

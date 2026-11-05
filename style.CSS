@@ -1,4 +1,11 @@
-﻿:root {
+﻿
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap');
+
+/* ========================================
+   1. ОСНОВНІ НАЛАШТУВАННЯ
+======================================== */
+
+:root {
     --bg: #f7f7f3;
     --white: #ffffff;
     --dark: #20211f;
@@ -25,7 +32,7 @@ html {
 }
 
 body {
-    font-family: Arial, sans-serif;
+    font-family: 'Space Grotesk', Arial, sans-serif;
     background: var(--bg);
     color: var(--dark);
     line-height: 1.6;
@@ -36,7 +43,7 @@ button,
 input,
 select,
 textarea {
-    font-family: Arial, sans-serif;
+    font-family: 'Space Grotesk', Arial, sans-serif;
 }
 
 button,
@@ -72,6 +79,10 @@ textarea {
     color: var(--dark);
 }
 
+/* ========================================
+   2. ШАПКА САЙТУ
+======================================== */
+
 header,
 .site-header {
     min-height: 82px;
@@ -84,46 +95,29 @@ header,
     border-bottom: 1px solid var(--border);
 }
 
-.brand {
-    display: inline-flex;
-    align-items: center;
-    gap: 10px;
+.logo,
+.logo a {
     font-size: 28px;
     font-weight: 700;
     letter-spacing: -1.5px;
 }
 
-.brand-mark {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 34px;
-    height: 34px;
-    border-radius: 10px;
-    background: var(--lime);
-    color: var(--dark);
-    font-size: 20px;
+.logo span {
+    color: #758d35;
 }
 
-.brand span:last-child {
-    color: var(--dark);
-}
-
-.main-nav,
 nav {
     display: flex;
     align-items: center;
     gap: 28px;
 }
 
-.main-nav a,
 nav a {
     font-size: 14px;
     font-weight: 600;
     transition: color 0.2s ease;
 }
 
-.main-nav a:hover,
 nav a:hover {
     color: #718447;
 }
@@ -148,20 +142,9 @@ nav a:hover {
     background: var(--lime-hover);
 }
 
-.cart-count {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    min-width: 22px;
-    height: 22px;
-    padding: 0 6px;
-    border-radius: 999px;
-    border: 1px solid var(--border);
-    background: var(--white);
-    color: var(--dark);
-    font-size: 12px;
-    font-weight: 700;
-}
+/* ========================================
+   3. ГОЛОВНИЙ БАНЕР
+======================================== */
 
 .hero {
     width: 86%;
@@ -212,7 +195,6 @@ nav a:hover {
     font-size: 16px;
 }
 
-.button,
 .hero-button,
 .primary-button {
     display: inline-flex;
@@ -228,11 +210,14 @@ nav a:hover {
 }
 
 .hero-button:hover,
-.primary-button:hover,
-.button:hover {
+.primary-button:hover {
     background: var(--lime-hover);
     transform: translateY(-2px);
 }
+
+/* ========================================
+   4. ЗАГОЛОВКИ СЕКЦІЙ
+======================================== */
 
 section {
     scroll-margin-top: 25px;
@@ -258,6 +243,10 @@ section {
     margin-top: 8px;
     color: var(--gray);
 }
+
+/* ========================================
+   5. КАТАЛОГ І ФІЛЬТРИ
+======================================== */
 
 .catalog-section {
     padding-bottom: 85px;
@@ -346,6 +335,10 @@ select {
     font-size: 14px;
 }
 
+/* ========================================
+   6. СІТКА ТОВАРІВ
+======================================== */
+
 #product-grid,
 .products-grid,
 #products-grid,
@@ -355,6 +348,29 @@ select {
     align-items: stretch;
     gap: 22px;
 }
+
+.product-category-row {
+    display: grid;
+    grid-column: 1 / -1;
+    gap: 14px;
+}
+
+.product-category-row > h3 {
+    margin-left: 12px;
+    font-size: 22px;
+    letter-spacing: -0.5px;
+}
+
+.product-category-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    align-items: stretch;
+    gap: 22px;
+}
+
+/* ========================================
+   7. КАРТКИ ТОВАРІВ
+======================================== */
 
 .product-card {
     min-width: 0;
@@ -373,8 +389,8 @@ select {
 }
 
 .product-image {
-    height: 245px;
-    padding: 18px;
+    width: 100%;
+    aspect-ratio: 1;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -382,10 +398,18 @@ select {
     background: #f0f1eb;
 }
 
+.product-image-button {
+    width: 100%;
+    height: 100%;
+    padding: 0;
+    border: 0;
+    background: transparent;
+}
+
 .product-image img {
     width: 100%;
     height: 100%;
-    object-fit: contain;
+    object-fit: cover;
     mix-blend-mode: multiply;
     transition: transform 0.3s ease;
 }
@@ -458,6 +482,10 @@ select {
     transform: translateY(-2px);
 }
 
+/* ========================================
+   8. СТОРІНКА КОШИКА
+======================================== */
+
 .cart-section {
     width: 88%;
     max-width: 1200px;
@@ -488,9 +516,12 @@ select {
     gap: 16px;
 }
 
+/* Картка товару в кошику */
+
 .cart-item {
     min-width: 0;
     display: flex;
+    flex-wrap: wrap;
     align-items: center;
     gap: 20px;
     padding: 20px;
@@ -515,6 +546,11 @@ select {
     object-fit: contain;
 }
 
+.cart-item-details {
+    flex: 1;
+    min-width: 0;
+}
+
 .cart-item-info {
     flex: 1;
     min-width: 0;
@@ -535,6 +571,38 @@ select {
     font-size: 21px;
     font-weight: 700;
 }
+
+.quantity-control {
+    display: flex;
+    align-items: center;
+    flex: 1 0 100%;
+    order: 2;
+    gap: 10px;
+}
+
+.quantity-control button {
+    flex: 1;
+    min-width: 0;
+    height: 40px;
+    border: 0;
+    border-radius: 10px;
+    background: var(--green);
+    color: var(--white);
+    font-size: 18px;
+    transition: background 0.2s ease;
+}
+
+.quantity-control button:hover {
+    background: var(--green-light);
+}
+
+.quantity-control span {
+    min-width: 40px;
+    text-align: center;
+    font-weight: 700;
+}
+
+/* Кількість товару */
 
 .cart-item-actions {
     display: flex;
@@ -566,6 +634,7 @@ select {
 }
 
 .remove-button {
+    order: 1;
     padding: 7px 10px;
     border: none;
     border-radius: 8px;
@@ -579,6 +648,10 @@ select {
     background: #fff0ee;
     color: var(--danger);
 }
+
+/* ========================================
+   9. ПІДСУМОК ЗАМОВЛЕННЯ
+======================================== */
 
 .cart-summary {
     position: sticky;
@@ -654,6 +727,10 @@ select {
     text-decoration: underline;
 }
 
+/* ========================================
+   10. ПОРОЖНІЙ КОШИК
+======================================== */
+
 .empty-cart {
     padding: 55px 25px;
     border: 1px dashed #d8dbd0;
@@ -671,6 +748,10 @@ select {
     margin-bottom: 22px;
     color: var(--gray);
 }
+
+/* ========================================
+   11. ФОРМА ОФОРМЛЕННЯ
+======================================== */
 
 .checkout-section {
     width: 88%;
@@ -724,6 +805,10 @@ select {
     resize: vertical;
 }
 
+/* ========================================
+   12. ПОВІДОМЛЕННЯ
+======================================== */
+
 .success-message {
     padding: 15px 18px;
     border: 1px solid #d4e8a1;
@@ -740,8 +825,11 @@ select {
     color: #922b21;
 }
 
-footer,
-.site-footer {
+/* ========================================
+   13. ПІДВАЛ САЙТУ
+======================================== */
+
+footer {
     padding: 35px 7%;
     display: flex;
     justify-content: space-between;
@@ -752,17 +840,18 @@ footer,
     color: var(--white);
 }
 
-footer p,
-.site-footer p,
-.site-footer > span {
+footer p {
     color: #d3dbd1;
     font-size: 13px;
 }
 
-footer a:hover,
-.site-footer a:hover {
+footer a:hover {
     color: var(--lime);
 }
+
+/* ========================================
+   14. АНІМАЦІЇ ТА ФОКУС
+======================================== */
 
 button:focus-visible,
 a:focus-visible,
@@ -773,15 +862,29 @@ textarea:focus-visible {
     outline-offset: 3px;
 }
 
-[hidden] {
-    display: none !important;
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        scroll-behavior: auto !important;
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+    }
 }
+
+/* ========================================
+   15. ПЛАНШЕТИ
+======================================== */
 
 @media (max-width: 1050px) {
     #product-grid,
     .products-grid,
     #products-grid,
     #catalog-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .product-category-grid {
         grid-template-columns: repeat(3, minmax(0, 1fr));
     }
 
@@ -799,6 +902,10 @@ textarea:focus-visible {
     }
 }
 
+/* ========================================
+   16. МОБІЛЬНІ ПРИСТРОЇ
+======================================== */
+
 @media (max-width: 760px) {
     header,
     .site-header {
@@ -806,8 +913,7 @@ textarea:focus-visible {
         flex-wrap: wrap;
     }
 
-    nav,
-    .main-nav {
+    nav {
         flex-wrap: wrap;
         gap: 15px;
     }
@@ -854,8 +960,9 @@ textarea:focus-visible {
         gap: 14px;
     }
 
-    .product-image {
-        height: 190px;
+    .product-category-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 14px;
     }
 
     .product-info {
@@ -887,69 +994,91 @@ textarea:focus-visible {
         width: 90%;
         padding: 22px;
     }
-
-    footer,
-    .site-footer {
-        padding: 28px 5%;
-        flex-direction: column;
-        align-items: flex-start;
-    }
 }
+
+/* ========================================
+   17. МАЛЕНЬКІ ЕКРАНИ
+======================================== */
 
 @media (max-width: 480px) {
     .logo,
-    .logo a,
-    .brand {
+    .logo a {
         font-size: 24px;
     }
 
-    nav,
-    .main-nav {
+    nav {
         width: 100%;
         gap: 12px;
     }
 
-    nav a,
-    .main-nav a {
+    nav a {
         font-size: 13px;
     }
 
     .hero {
-        width: 90%;
-        min-height: 400px;
-        margin: 20px auto 45px;
-        padding: 30px 24px;
+        min-height: 380px;
+        padding: 24px;
+        border-radius: 20px;
     }
 
     .hero h1 {
-        font-size: clamp(28px, 9vw, 42px);
+        font-size: 38px;
+        letter-spacing: -1.5px;
     }
 
-    .product-grid,
+    .hero p {
+        font-size: 14px;
+    }
+
+    #product-grid,
     .products-grid,
     #products-grid,
     #catalog-grid {
         grid-template-columns: 1fr;
     }
 
+    .product-category-grid {
+        grid-template-columns: 1fr;
+    }
+
     .cart-item {
-        display: flex;
-        flex-direction: column;
         align-items: flex-start;
+        gap: 12px;
+        padding: 13px;
     }
 
     .cart-item img {
-        width: 100%;
-        height: 140px;
+        width: 85px;
+        height: 85px;
     }
-}
 
-@media (prefers-reduced-motion: reduce) {
-    *,
-    *::before,
-    *::after {
-        scroll-behavior: auto !important;
-        animation-duration: 0.01ms !important;
-        transition-duration: 0.01ms !important;
+    .cart-item-info h3 {
+        font-size: 15px;
+    }
+
+    .cart-item-price {
+        font-size: 17px;
+    }
+
+    .cart-item-actions {
+        gap: 7px;
+    }
+
+    .cart-summary {
+        padding: 20px;
+    }
+
+    .summary-total strong {
+        font-size: 21px;
+    }
+
+    .checkout-section {
+        padding: 18px;
+    }
+
+    footer {
+        padding: 28px 5%;
+        flex-direction: column;
+        align-items: flex-start;
     }
 }

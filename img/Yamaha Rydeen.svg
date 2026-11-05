@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 600">
+  <rect width="600" height="600" fill="#f0f1eb"/>
+  <g stroke="#25372f" stroke-width="12" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M170 220 130 500M430 220l40 280M250 340l-30 160M350 340l30 160M150 390h300"/>
+    <path d="M160 180 130 120M430 180l45-65M245 235l-65-40M355 235l75-40"/>
+    <ellipse cx="145" cy="112" rx="72" ry="15" fill="#d7f36a"/>
+    <ellipse cx="480" cy="105" rx="68" ry="15" fill="#d7f36a"/>
+    <ellipse cx="170" cy="190" rx="64" ry="18" fill="#fff" />
+    <path d="M106 190v96c0 25 128 25 128 0v-96" fill="#3c5748"/>
+    <ellipse cx="170" cy="286" rx="64" ry="18" fill="#25372f"/>
+    <ellipse cx="300" cy="265" rx="72" ry="20" fill="#fff"/>
+    <path d="M228 265v115c0 28 144 28 144 0V265" fill="#3c5748"/>
+    <ellipse cx="300" cy="380" rx="72" ry="20" fill="#25372f"/>
+    <ellipse cx="430" cy="190" rx="64" ry="18" fill="#fff"/>
+    <path d="M366 190v96c0 25 128 25 128 0v-96" fill="#3c5748"/>
+    <ellipse cx="430" cy="286" rx="64" ry="18" fill="#25372f"/>
+    <ellipse cx="215" cy="335" rx="45" ry="14" fill="#d7f36a"/>
+    <path d="M170 335v55c0 20 90 20 90 0v-55" fill="#3c5748"/>
+    <ellipse cx="215" cy="390" rx="45" ry="14" fill="#25372f"/>
+  </g>
+</svg>
