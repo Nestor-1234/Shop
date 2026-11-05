@@ -439,7 +439,8 @@ select {
 #products-grid,
 #catalog-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 260px));
+    justify-content: center;
     align-items: stretch;
     gap: 22px;
     padding: 24px;
