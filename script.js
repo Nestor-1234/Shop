@@ -107,10 +107,9 @@ function renderCatalog(products) {
         const renderProductCard = (product) => `
             <article class="product-card" data-product-card="${product.id}">
                 <div class="product-image">
-                    <button class="product-image-button" type="button" data-product-details="${product.id}"
-                        aria-label="Переглянути фото й опис ${product.title}">
+                    <div class="product-image-button" aria-label="Фото ${product.title}">
                         <img src="${product.image}" alt="${product.title}" loading="lazy">
-                    </button>
+                    </div>
                 </div>
                 <div class="product-info">
                     <h3 class="product-name">${product.title}</h3>
@@ -203,30 +202,16 @@ function renderCatalog(products) {
             return;
         }
 
-        const detailsButton = event.target.closest('[data-product-details]');
-        if (detailsButton) {
-            const product = products.find((item) => String(item.id) === detailsButton.dataset.productDetails);
-            if (!product) return;
-
-            const dialogImage = productDialog.querySelector('#product-dialog-image');
-            dialogImage.src = product.image;
-            dialogImage.alt = product.title;
-            productDialog.querySelector('#product-dialog-category').textContent = product.category;
-            productDialog.querySelector('#product-dialog-title').textContent = product.title;
-            productDialog.querySelector('#product-dialog-description').textContent = product.description;
-            productDialog.querySelector('#product-dialog-details').textContent = product.details;
-            productDialog.querySelector('#product-dialog-price').textContent = currency.format(product.price);
-            productDialog.showModal();
-            return;
-        }
     });
 
-    productDialog.querySelector('.product-dialog-close').addEventListener('click', () => {
-        productDialog.close();
-    });
-    productDialog.addEventListener('click', (event) => {
-        if (event.target === productDialog) productDialog.close();
-    });
+    if (productDialog) {
+        productDialog.querySelector('.product-dialog-close').addEventListener('click', () => {
+            productDialog.close();
+        });
+        productDialog.addEventListener('click', (event) => {
+            if (event.target === productDialog) productDialog.close();
+        });
+    }
 
     updateProducts();
 }

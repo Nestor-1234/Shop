@@ -215,6 +215,38 @@ nav a:hover {
     transform: translateY(-2px);
 }
 
+.about {
+    width: min(86%, 980px);
+    margin: 0 auto 88px;
+    padding: 18px 28px 12px;
+    text-align: center;
+}
+
+.about .eyebrow {
+    display: inline-block;
+    margin-bottom: 16px;
+    color: var(--green);
+    font-size: 12px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+}
+
+.about h2 {
+    max-width: 760px;
+    margin: 0 auto 18px;
+    font-size: clamp(32px, 4vw, 64px);
+    line-height: 1.08;
+    letter-spacing: -2px;
+}
+
+.about p:not(.eyebrow) {
+    max-width: 720px;
+    margin: 0 auto;
+    color: var(--gray);
+    font-size: clamp(16px, 1.8vw, 20px);
+    line-height: 1.6;
+}
+
 /* ========================================
    4. ЗАГОЛОВКИ СЕКЦІЙ
 ======================================== */
