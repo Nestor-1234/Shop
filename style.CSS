@@ -177,6 +177,24 @@ nav a:hover {
     font-weight: 600;
 }
 
+.language-switcher {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--gray);
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+.language-switcher select {
+    padding: 9px 12px;
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    background: var(--white);
+    color: var(--dark);
+    font: inherit;
+}
+
 .is-current {
     background: #eaf3bf;
 }
@@ -406,6 +424,12 @@ input[type="search"] {
     transition: border-color 0.2s ease;
 }
 
+.search-box {
+    display: block;
+    width: 230px;
+    max-width: 100%;
+}
+
 #product-search:focus,
 .search-input:focus,
 input[type="search"]:focus {
@@ -421,6 +445,10 @@ select {
     background: var(--white);
     color: var(--dark);
     outline: none;
+}
+
+#product-sort {
+    appearance: none;
 }
 
 #catalog-status {
@@ -456,7 +484,7 @@ select {
 }
 
 .product-category-row > h3 {
-    margin-left: 12px;
+    text-align: center;
     font-size: 22px;
     letter-spacing: -0.5px;
 }
@@ -982,7 +1010,7 @@ select {
 
 .checkout-success {
     width: min(90%, 720px);
-    margin: 0 auto 40px;
+    margin: 32px auto 40px;
     padding: 40px 30px;
     border: 1px solid #dfe8c7;
     border-radius: 24px;
@@ -1189,6 +1217,10 @@ textarea:focus-visible {
     .section-heading {
         align-items: flex-start;
         flex-direction: column;
+    }
+
+    .search-box {
+        width: 100%;
     }
 
     .catalog-toolbar {

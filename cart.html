@@ -3,79 +3,90 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Ваш кошик у магазині музичних інструментів Мелодія.">
-    <title>Кошик — Мелодія</title>
+    <meta name="description" content="Ваш кошик у магазині музичних інструментів Мелодія." data-i18n-content="cartMetaDescription">
+    <title data-i18n="cartTitle">Кошик — Мелодія</title>
     <link rel="stylesheet" href="style.CSS">
+    <script src="translations.js" defer></script>
     <script src="script.js" defer></script>
 </head>
 <body>
     <header class="site-header">
-        <a class="brand" href="index.html" aria-label="Мелодія — на головну">
+        <a class="brand" href="index.html" aria-label="Мелодія — на головну" data-i18n-aria-label="homeLink">
             <span class="brand-mark" aria-hidden="true">♫</span>
             <span>мелодія</span>
         </a>
-        <nav class="main-nav" aria-label="Головна навігація">
-            <a href="index.html#catalog">Каталог</a>
-            <a href="index.html#about">Про нас</a>
+        <nav class="main-nav" aria-label="Головна навігація" data-i18n-aria-label="mainNavigation">
+            <a href="index.html#catalog" data-i18n="catalog">Каталог</a>
+            <a href="index.html#about" data-i18n="about">Про нас</a>
         </nav>
         <a class="cart-link is-current" href="cart.html" aria-current="page">
-            Кошик <span class="cart-count" data-cart-count>0</span>
+            <span data-i18n="cart">Кошик</span> <span class="cart-count" data-cart-count>0</span>
         </a>
+        <label class="language-switcher">
+            <span data-i18n="languageLabel">Мова</span>
+            <select data-language-select aria-label="Мова сайту" data-i18n-aria-label="languageLabel">
+                <option value="uk">Українська</option>
+                <option value="en">English</option>
+                <option value="es">Español</option>
+                <option value="zh">中文</option>
+                <option value="hi">हिन्दी</option>
+            </select>
+        </label>
     </header>
 
     <main class="cart-page section-wrap">
-        <a class="back-link" href="index.html#catalog">← Продовжити покупки</a>
+        <a class="back-link" href="index.html#catalog">← <span data-i18n="continueShopping">Продовжити покупки</span></a>
         <div class="section-heading cart-heading">
             <div>
-                <p class="eyebrow">Усе готово до нового звучання</p>
-                <h1>Ваш кошик</h1>
+                <p class="eyebrow" data-i18n="cartEyebrow">Усе готово до нового звучання</p>
+                <h1 data-i18n="yourCart">Ваш кошик</h1>
             </div>
         </div>
         <p class="status-message" id="cart-status" role="status" hidden></p>
         <div class="cart-layout">
             <div class="cart-items" id="cart-items" aria-live="polite"></div>
             <aside class="cart-summary" id="cart-summary">
-                <p class="eyebrow">Ваше замовлення</p>
-                <div class="summary-row"><span>Товари</span><span id="cart-subtotal">0 ₴</span></div>
-                <div class="summary-row"><span>Доставка</span><span>Безкоштовно</span></div>
-                <div class="summary-total"><span>Разом</span><span id="cart-total">0 ₴</span></div>
-                <button class="button button-dark checkout-button" id="checkout-button" type="button">Оформити замовлення <span aria-hidden="true">→</span></button>
+                <p class="eyebrow" data-i18n="yourOrder">Ваше замовлення</p>
+                <div class="summary-row"><span data-i18n="items">Товари</span><span id="cart-subtotal">0 ₴</span></div>
+                <div class="summary-row"><span data-i18n="delivery">Доставка</span><span data-i18n="free">Безкоштовно</span></div>
+                <div class="summary-total"><span data-i18n="total">Разом</span><span id="cart-total">0 ₴</span></div>
+                <button class="button button-dark checkout-button" id="checkout-button" type="button"><span data-i18n="placeOrder">Оформити замовлення</span> <span aria-hidden="true">→</span></button>
                 <form class="checkout-form" id="checkout-form" hidden>
-                    <p class="checkout-form-title">Контактні дані для замовлення</p>
+                    <p class="checkout-form-title" data-i18n="contactDetails">Контактні дані для замовлення</p>
                     <label class="checkout-field">
-                        <span>Ім'я та прізвище</span>
+                        <span data-i18n="fullName">Ім'я та прізвище</span>
                         <input name="name" type="text" autocomplete="name" required>
                     </label>
                     <label class="checkout-field">
-                        <span>Телефон</span>
+                        <span data-i18n="phone">Телефон</span>
                         <input name="phone" type="tel" autocomplete="tel" placeholder="+380..." required>
                     </label>
                     <label class="checkout-field">
-                        <span>Місто</span>
+                        <span data-i18n="city">Місто</span>
                         <input name="city" type="text" autocomplete="address-level2" required>
                     </label>
                     <label class="checkout-field">
-                        <span>Адреса або номер відділення</span>
+                        <span data-i18n="address">Адреса або номер відділення</span>
                         <input name="address" type="text" autocomplete="street-address" required>
                     </label>
-                    <p class="checkout-form-note">Демо-замовлення: дані залишаються у вашому браузері лише до відправлення форми й нікуди не надсилаються. Оплата не проводиться.</p>
-                    <button class="button button-dark checkout-submit" type="submit">Підтвердити замовлення</button>
-                    <button class="checkout-cancel" id="checkout-cancel" type="button">Повернутися до кошика</button>
+                    <p class="checkout-form-note" data-i18n="demoNote">Демо-замовлення: дані залишаються у вашому браузері лише до відправлення форми й нікуди не надсилаються. Оплата не проводиться.</p>
+                    <button class="button button-dark checkout-submit" type="submit" data-i18n="confirmOrder">Підтвердити замовлення</button>
+                    <button class="checkout-cancel" id="checkout-cancel" type="button" data-i18n="returnToCart">Повернутися до кошика</button>
                 </form>
             </aside>
         </div>
         <section class="checkout-success" id="checkout-success" role="status" aria-live="polite" hidden>
             <span class="success-mark" aria-hidden="true">✓</span>
-            <p class="eyebrow">Замовлення оформлено</p>
-            <h2>Дякуємо, <span id="success-name"></span>!</h2>
+            <p class="eyebrow" data-i18n="orderComplete">Замовлення оформлено</p>
+            <h2><span data-i18n="thankYou">Дякуємо</span>, <span id="success-name"></span>!</h2>
             <p id="success-message"></p>
-            <a class="button button-dark" href="index.html#catalog">Повернутися до каталогу <span aria-hidden="true">→</span></a>
+            <a class="button button-dark" href="index.html#catalog"><span data-i18n="returnToCatalog">Повернутися до каталогу</span> <span aria-hidden="true">→</span></a>
         </section>
     </main>
 
     <footer class="site-footer">
         <a class="brand brand-footer" href="index.html"><span class="brand-mark" aria-hidden="true">♫</span><span>мелодія</span></a>
-        <p>Магазин музичних інструментів</p>
+        <p data-i18n="footerDescription">Магазин музичних інструментів</p>
         <span>© 2026 Мелодія</span>
     </footer>
 </body>

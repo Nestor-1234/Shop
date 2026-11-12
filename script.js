@@ -1,11 +1,94 @@
 const CART_KEY = 'melodiya-cart';
 const FAVORITES_KEY = 'melodiya-favorites';
+const LANGUAGE_KEY = 'melodiya-language';
 const FAVORITES_FILTER = 'Обране';
-const currency = new Intl.NumberFormat('uk-UA', {
-    style: 'currency',
-    currency: 'UAH',
-    maximumFractionDigits: 0
-});
+const i18n = window.storeI18n;
+let currentLanguage = 'uk';
+
+function translate(key, values = {}) {
+    let message = i18n.messages[currentLanguage][key] || i18n.messages.uk[key] || key;
+    Object.entries(values).forEach(([name, value]) => {
+        message = message.replaceAll(`{${name}}`, value);
+    });
+    return message;
+}
+
+function formatCurrency(amount) {
+    return new Intl.NumberFormat(i18n.languages[currentLanguage].locale, {
+        style: 'currency',
+        currency: 'UAH',
+        maximumFractionDigits: 0
+    }).format(amount);
+}
+
+function categoryKey(category) {
+    const categoryKeys = {
+        'Усі': 'all',
+        [FAVORITES_FILTER]: 'favorites',
+        'Гітари': 'guitars',
+        'Бас-гітари': 'guitars',
+        'Клавішні': 'keyboards',
+        'Ударні': 'drums',
+        'Аксесуари': 'accessories'
+    };
+    return categoryKeys[category];
+}
+
+function canonicalCategory(category) {
+    return category === 'Бас-гітари' ? 'Гітари' : category;
+}
+
+function localizeCategory(category) {
+    const key = categoryKey(category);
+    return key ? i18n.categories[currentLanguage][key] : category;
+}
+
+function localizeProduct(product) {
+    const copy = i18n.products[currentLanguage]?.[product.id];
+    return {
+        ...product,
+        title: copy?.[3] || product.title,
+        category: copy?.[0] || localizeCategory(canonicalCategory(product.category)),
+        description: copy?.[1] || product.description,
+        details: copy?.[2] || product.details
+    };
+}
+
+function initializeLanguage() {
+    const savedLanguage = localStorage.getItem(LANGUAGE_KEY);
+    currentLanguage = Object.hasOwn(i18n.languages, savedLanguage) ? savedLanguage : 'uk';
+    document.documentElement.lang = currentLanguage === 'zh'
+        ? 'zh-CN'
+        : currentLanguage === 'hi'
+            ? 'hi-IN'
+            : currentLanguage;
+    document.documentElement.dir = 'ltr';
+
+    document.querySelectorAll('[data-i18n]').forEach((element) => {
+        element.textContent = translate(element.dataset.i18n);
+    });
+    document.querySelectorAll('[data-i18n-html]').forEach((element) => {
+        element.innerHTML = translate(element.dataset.i18nHtml);
+    });
+    document.querySelectorAll('[data-i18n-placeholder]').forEach((element) => {
+        element.placeholder = translate(element.dataset.i18nPlaceholder);
+    });
+    document.querySelectorAll('[data-i18n-content]').forEach((element) => {
+        element.content = translate(element.dataset.i18nContent);
+    });
+    document.querySelectorAll('[data-i18n-aria-label]').forEach((element) => {
+        element.setAttribute('aria-label', translate(element.dataset.i18nAriaLabel));
+    });
+
+    const selector = document.querySelector('[data-language-select]');
+    if (selector) {
+        selector.value = currentLanguage;
+        selector.addEventListener('change', () => {
+            localStorage.setItem(LANGUAGE_KEY, selector.value);
+            window.location.reload();
+        });
+    }
+}
 
 function readCart() {
     const savedCart = localStorage.getItem(CART_KEY);
@@ -51,17 +134,18 @@ function updateCartCount(cart) {
 }
 
 function renderProductCartActions(product, quantity) {
+    const localizedProduct = localizeProduct(product);
     if (quantity > 0) {
         return `
             <div class="product-cart-actions is-added" data-product-cart-actions="${product.id}"
                 aria-live="polite" aria-atomic="true">
-                <span class="added-label">Додано ✓</span>
-                <div class="quantity-control" aria-label="Кількість ${product.title}: ${quantity}">
+                <span class="added-label">${translate('added')}</span>
+                <div class="quantity-control" aria-label="${translate('quantity')} ${localizedProduct.title}: ${quantity}">
                     <button class="quantity-button" type="button" data-cart-change="${product.id}"
-                        data-change="-1" aria-label="Зменшити кількість ${product.title}">−</button>
+                        data-change="-1" aria-label="${translate('decreaseQuantity')} ${localizedProduct.title}">−</button>
                     <span data-product-quantity>${quantity}</span>
                     <button class="quantity-button" type="button" data-cart-change="${product.id}"
-                        data-change="1" aria-label="Збільшити кількість ${product.title}">+</button>
+                        data-change="1" aria-label="${translate('increaseQuantity')} ${localizedProduct.title}">+</button>
                 </div>
             </div>
         `;
@@ -70,7 +154,7 @@ function renderProductCartActions(product, quantity) {
     return `
         <div class="product-cart-actions" data-product-cart-actions="${product.id}">
             <button class="add-button" type="button" data-add-to-cart="${product.id}"
-                aria-label="Додати ${product.title} до кошика">Додати в кошик</button>
+                aria-label="${translate('addToCart')}: ${localizedProduct.title}">${translate('addToCart')}</button>
         </div>
     `;
 }
@@ -100,69 +184,75 @@ function renderCatalog(products) {
     const status = document.querySelector('#catalog-status');
     const productDialog = document.querySelector('#product-dialog');
     let activeCategory = 'Усі';
-    const categories = ['Усі', ...new Set(products.map((product) => product.category)), FAVORITES_FILTER];
+    const categories = [
+        'Усі',
+        ...new Set(products.map((product) => canonicalCategory(product.category))),
+        FAVORITES_FILTER
+    ];
 
     filters.innerHTML = categories.map((category) => `
         <button class="filter-chip${category === activeCategory ? ' is-active' : ''}"
             type="button" data-category="${category}" aria-pressed="${category === activeCategory}">
-            ${category}
+            ${localizeCategory(category)}
         </button>
     `).join('');
 
     function updateProducts() {
-        const query = search.value.trim().toLocaleLowerCase('uk');
+        const query = search.value.trim().toLocaleLowerCase(i18n.languages[currentLanguage].locale);
         const favorites = new Set(readFavorites());
         let visibleProducts = products.filter((product) => {
             const matchesCategory = activeCategory === 'Усі' ||
                 (activeCategory === FAVORITES_FILTER
                     ? favorites.has(String(product.id))
-                    : product.category === activeCategory);
-            const matchesSearch = `${product.title} ${product.category} ${product.description}`
-                .toLocaleLowerCase('uk').includes(query);
+                    : canonicalCategory(product.category) === activeCategory);
+            const localizedProduct = localizeProduct(product);
+            const matchesSearch = `${localizedProduct.title} ${localizedProduct.category} ${localizedProduct.description} ${product.title} ${product.category} ${product.description}`
+                .toLocaleLowerCase(i18n.languages[currentLanguage].locale).includes(query);
             return matchesCategory && matchesSearch;
         });
 
         if (sort.value === 'price-asc') visibleProducts.sort((a, b) => a.price - b.price);
         if (sort.value === 'price-desc') visibleProducts.sort((a, b) => b.price - a.price);
-        if (sort.value === 'name') visibleProducts.sort((a, b) => a.title.localeCompare(b.title, 'uk'));
+        if (sort.value === 'name') {
+            visibleProducts.sort((a, b) => localizeProduct(a).title.localeCompare(
+                localizeProduct(b).title,
+                i18n.languages[currentLanguage].locale
+            ));
+        }
 
         const cart = readCart();
-        const renderProductCard = (product) => `
+        const renderProductCard = (product) => {
+            const localizedProduct = localizeProduct(product);
+            const isFavorite = favorites.has(String(product.id));
+            return `
             <article class="product-card" data-product-card="${product.id}">
                 <div class="product-image">
-                    <button class="favorite-button${favorites.has(String(product.id)) ? ' is-favorite' : ''}"
+                    <button class="favorite-button${isFavorite ? ' is-favorite' : ''}"
                         type="button" data-favorite="${product.id}"
-                        aria-label="${favorites.has(String(product.id)) ? 'Вилучити' : 'Додати'} ${product.title} ${FAVORITES_FILTER.toLocaleLowerCase('uk')}"
-                        aria-pressed="${favorites.has(String(product.id))}">${favorites.has(String(product.id)) ? '♥' : '♡'}</button>
-                    <div class="product-image-button" aria-label="Фото ${product.title}">
-                        <img src="${product.image}" alt="${product.title}" loading="lazy">
+                        aria-label="${translate(isFavorite ? 'removeFavorite' : 'addFavorite')} ${localizedProduct.title} ${translate('favoriteLabel')}"
+                        aria-pressed="${isFavorite}">${isFavorite ? '♥' : '♡'}</button>
+                    <div class="product-image-button" aria-label="${localizedProduct.title}">
+                        <img src="${product.image}" alt="${localizedProduct.title}" loading="lazy">
                     </div>
                 </div>
                 <div class="product-info">
-                    <h3 class="product-name">${product.title}</h3>
-                    <p class="product-description">${product.description}</p>
+                    <h3 class="product-name">${localizedProduct.title}</h3>
+                    <p class="product-description">${localizedProduct.description}</p>
                     <div class="product-bottom">
-                        <strong class="product-price">${currency.format(product.price)}</strong>
+                        <strong class="product-price">${formatCurrency(product.price)}</strong>
                         ${renderProductCartActions(product, cart[product.id] || 0)}
                     </div>
                 </div>
             </article>
-        `;
+            `;
+        };
 
         if (activeCategory === 'Усі') {
             const groupNames = ['Гітари', 'Клавішні', 'Ударні', 'Аксесуари'];
-            const getGroupName = (category) => {
-                const normalizedCategory = category.toLocaleLowerCase('uk');
-                if (normalizedCategory.includes('гітар')) return 'Гітари';
-                if (normalizedCategory.includes('клавіш')) return 'Клавішні';
-                if (normalizedCategory.includes('ударн')) return 'Ударні';
-                if (normalizedCategory.includes('аксесуар')) return 'Аксесуари';
-                return category;
-            };
             const groupedProducts = new Map();
 
             visibleProducts.forEach((product) => {
-                const groupName = getGroupName(product.category);
+                const groupName = canonicalCategory(product.category);
                 if (!groupedProducts.has(groupName)) groupedProducts.set(groupName, []);
                 groupedProducts.get(groupName).push(product);
             });
@@ -172,8 +262,8 @@ function renderCatalog(products) {
                 ...[...groupedProducts.keys()].filter((groupName) => !groupNames.includes(groupName))
             ];
             grid.innerHTML = orderedGroups.map((groupName) => `
-                <section class="product-category-row" aria-label="${groupName}">
-                    <h3>${groupName}</h3>
+                <section class="product-category-row" aria-label="${localizeCategory(groupName)}">
+                    <h3>${localizeCategory(groupName)}</h3>
                     <div class="product-category-grid">
                         ${groupedProducts.get(groupName).map(renderProductCard).join('')}
                     </div>
@@ -185,8 +275,8 @@ function renderCatalog(products) {
 
         if (visibleProducts.length === 0) {
             showStatus(status, activeCategory === FAVORITES_FILTER
-                ? 'В обраному поки немає товарів.'
-                : 'За вашим запитом нічого не знайдено.');
+                ? translate('favoritesEmpty')
+                : translate('searchEmpty'));
         } else {
             status.hidden = true;
         }
@@ -275,38 +365,39 @@ function renderCart(products) {
     const entries = Object.entries(validCart);
     itemsElement.innerHTML = entries.length ? entries.map(([id, quantity]) => {
         const product = productById.get(id);
+        const localizedProduct = localizeProduct(product);
         return `
             <article class="cart-item">
                 <div class="cart-item-art" aria-hidden="true">
                     <img src="${product.image}" alt="" loading="lazy">
                 </div>
                 <div class="cart-item-details">
-                    <span class="product-category">${product.category}</span>
-                    <h2>${product.title}</h2>
-                    <strong>${currency.format(product.price)}</strong>
+                    <span class="product-category">${localizedProduct.category}</span>
+                    <h2>${localizedProduct.title}</h2>
+                    <strong>${formatCurrency(product.price)}</strong>
                 </div>
-                <div class="quantity-control" aria-label="Кількість: ${quantity}">
-                    <button type="button" data-quantity="${id}" data-change="-1" aria-label="Зменшити кількість">−</button>
+                <div class="quantity-control" aria-label="${translate('quantity')}: ${quantity}">
+                    <button type="button" data-quantity="${id}" data-change="-1" aria-label="${translate('decreaseQuantity')}">−</button>
                     <span>${quantity}</span>
-                    <button type="button" data-quantity="${id}" data-change="1" aria-label="Збільшити кількість">+</button>
+                    <button type="button" data-quantity="${id}" data-change="1" aria-label="${translate('increaseQuantity')}">+</button>
                 </div>
-                <button class="remove-button" type="button" data-remove="${id}">Видалити</button>
+                <button class="remove-button" type="button" data-remove="${id}">${translate('remove')}</button>
             </article>
         `;
     }).join('') : `
         <div class="empty-cart">
             <span aria-hidden="true">♫</span>
-            <h2>Кошик поки порожній</h2>
-            <p>Саме час знайти інструмент, який надихне на нові мелодії.</p>
-            <a class="button button-dark" href="index.html#catalog">До каталогу <span aria-hidden="true">→</span></a>
+            <h2>${translate('cartEmpty')}</h2>
+            <p>${translate('cartEmptyCopy')}</p>
+            <a class="button button-dark" href="index.html#catalog">${translate('toCatalog')} <span aria-hidden="true">→</span></a>
         </div>
     `;
 
     const total = entries.reduce((sum, [id, quantity]) => {
         return sum + productById.get(id).price * quantity;
     }, 0);
-    document.querySelector('#cart-subtotal').textContent = currency.format(total);
-    document.querySelector('#cart-total').textContent = currency.format(total);
+    document.querySelector('#cart-subtotal').textContent = formatCurrency(total);
+    document.querySelector('#cart-total').textContent = formatCurrency(total);
     document.querySelector('#checkout-button').disabled = entries.length === 0;
 
     itemsElement.onclick = (event) => {
@@ -341,14 +432,15 @@ function renderCart(products) {
         event.preventDefault();
 
         if (entries.length === 0) {
-            showStatus(status, 'Кошик порожній — додайте товари перед оформленням.', true);
+            showStatus(status, translate('emptyCheckout'), true);
             return;
         }
 
         const customerName = checkoutForm.elements.name.value.trim();
         document.querySelector('#success-name').textContent = customerName;
-        document.querySelector('#success-message').textContent =
-            `Ваше замовлення на суму ${currency.format(total)} оформлено.`;
+        document.querySelector('#success-message').textContent = translate('successMessage', {
+            total: formatCurrency(total)
+        });
         document.querySelector('#checkout-success').hidden = false;
         document.querySelector('.cart-layout').hidden = true;
         saveCart({});
@@ -362,8 +454,9 @@ function renderCart(products) {
 }
 
 async function initializeStore() {
-    const status = document.querySelector('#catalog-status') || document.querySelector('#cart-status');
     try {
+        initializeLanguage();
+        const status = document.querySelector('#catalog-status') || document.querySelector('#cart-status');
         const cart = readCart();
         readFavorites();
         updateCartCount(cart);
@@ -372,7 +465,8 @@ async function initializeStore() {
         renderCart(products);
     } catch (error) {
         console.error('Не вдалося запустити магазин:', error);
-        showStatus(status, 'Не вдалося завантажити магазин. Запустіть локальний вебсервер і оновіть сторінку.', true);
+        const status = document.querySelector('#catalog-status') || document.querySelector('#cart-status');
+        showStatus(status, translate('loadError'), true);
     }
 }
 

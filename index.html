@@ -3,33 +3,44 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Музичні інструменти та все для натхненної гри.">
-    <title>Мелодія — музичні інструменти</title>
+    <meta name="description" content="Музичні інструменти та все для натхненної гри." data-i18n-content="metaDescription">
+    <title data-i18n="homeTitle">Мелодія — музичні інструменти</title>
     <link rel="stylesheet" href="style.CSS">
+    <script src="translations.js" defer></script>
     <script src="script.js" defer></script>
 </head>
 <body>
     <header class="site-header">
-        <a class="brand" href="index.html" aria-label="Мелодія — на головну">
+        <a class="brand" href="index.html" aria-label="Мелодія — на головну" data-i18n-aria-label="homeLink">
             <span class="brand-mark" aria-hidden="true">♫</span>
             <span>мелодія</span>
         </a>
-        <nav class="main-nav" aria-label="Головна навігація">
-            <a href="#catalog">Каталог</a>
-            <a href="#about">Про нас</a>
+        <nav class="main-nav" aria-label="Головна навігація" data-i18n-aria-label="mainNavigation">
+            <a href="#catalog" data-i18n="catalog">Каталог</a>
+            <a href="#about" data-i18n="about">Про нас</a>
         </nav>
         <a class="cart-link" href="cart.html">
-            Кошик <span class="cart-count" data-cart-count>0</span>
+            <span data-i18n="cart">Кошик</span> <span class="cart-count" data-cart-count>0</span>
         </a>
+        <label class="language-switcher">
+            <span data-i18n="languageLabel">Мова</span>
+            <select data-language-select aria-label="Мова сайту" data-i18n-aria-label="languageLabel">
+                <option value="uk">Українська</option>
+                <option value="en">English</option>
+                <option value="es">Español</option>
+                <option value="zh">中文</option>
+                <option value="hi">हिन्दी</option>
+            </select>
+        </label>
     </header>
 
     <main>
         <section class="hero">
             <div class="hero-content">
-                <p class="eyebrow">Знайди свій звук</p>
-                <h1>Твоя музика<br>починається тут.</h1>
-                <p class="hero-copy">Інструменти для перших акордів і великих сцен — обирай те, що надихає.</p>
-                <a class="button button-light" href="#catalog">Переглянути каталог <span aria-hidden="true">↘</span></a>
+                <p class="eyebrow" data-i18n="heroEyebrow">Знайди свій звук</p>
+                <h1 data-i18n-html="heroTitle">Твоя музика<br>починається тут.</h1>
+                <p class="hero-copy" data-i18n="heroCopy">Інструменти для перших акордів і великих сцен — обирай те, що надихає.</p>
+                <a class="button button-light" href="#catalog"><span data-i18n="browseCatalog">Переглянути каталог</span> <span aria-hidden="true">↘</span></a>
             </div>
             <div class="hero-art" aria-hidden="true">
                 <span class="hero-note">♫</span>
@@ -42,24 +53,22 @@
         <section class="catalog section-wrap" id="catalog">
             <div class="section-heading">
                 <div>
-                    <p class="eyebrow">Обирай свій інструмент</p>
-                    <h2>Каталог</h2>
+                    <p class="eyebrow" data-i18n="catalogEyebrow">Обирай свій інструмент</p>
+                    <h2 data-i18n="catalog">Каталог</h2>
                 </div>
                 <label class="search-box">
-                    <span class="visually-hidden">Пошук інструментів</span>
-                    <input id="product-search" type="search" placeholder="Знайти інструмент..." autocomplete="off">
-                    <span aria-hidden="true">⌕</span>
+                    <input id="product-search" type="search" aria-label="Знайти інструмент" data-i18n-aria-label="searchPlaceholder" placeholder="Знайти інструмент..." data-i18n-placeholder="searchPlaceholder" autocomplete="off">
                 </label>
             </div>
             <div class="catalog-toolbar">
-                <div class="category-filters" id="category-filters" aria-label="Фільтр за категорією"></div>
+                <div class="category-filters" id="category-filters" aria-label="Фільтр за категорією" data-i18n-aria-label="categoryFilter"></div>
                 <label class="sort-control">
-                    <span>Сортування</span>
-                    <select id="product-sort" aria-label="Сортування товарів">
-                        <option value="popular">За замовчуванням</option>
-                        <option value="price-asc">Спочатку дешевші</option>
-                        <option value="price-desc">Спочатку дорожчі</option>
-                        <option value="name">За назвою</option>
+                    <span data-i18n="sort">Сортування</span>
+                    <select id="product-sort" aria-label="Сортування товарів" data-i18n-aria-label="sort">
+                        <option value="popular" data-i18n="sortDefault">За замовчуванням</option>
+                        <option value="price-asc" data-i18n="sortPriceAsc">Спочатку дешевші</option>
+                        <option value="price-desc" data-i18n="sortPriceDesc">Спочатку дорожчі</option>
+                        <option value="name" data-i18n="sortName">За назвою</option>
                     </select>
                 </label>
             </div>
@@ -68,15 +77,15 @@
         </section>
 
         <section class="about section-wrap" id="about">
-            <p class="eyebrow">Музика — це для кожного</p>
-            <h2>Знайди інструмент,<br>який звучить як ти.</h2>
-            <p>Підбираємо інструменти для музикантів будь-якого рівня. Почни свою історію сьогодні.</p>
+            <p class="eyebrow" data-i18n="aboutEyebrow">Музика — це для кожного</p>
+            <h2 data-i18n-html="aboutTitle">Знайди інструмент,<br>який звучить як ти.</h2>
+            <p data-i18n="aboutCopy">Підбираємо інструменти для музикантів будь-якого рівня. Почни свою історію сьогодні.</p>
         </section>
     </main>
 
     <dialog class="product-dialog" id="product-dialog" aria-labelledby="product-dialog-title">
         <div class="product-dialog-content">
-            <button class="product-dialog-close" type="button" aria-label="Закрити опис">×</button>
+            <button class="product-dialog-close" type="button" aria-label="Закрити опис" data-i18n-aria-label="closeDescription">×</button>
             <div class="product-dialog-image-wrap">
                 <img id="product-dialog-image" src="" alt="">
             </div>
@@ -92,7 +101,7 @@
 
     <footer class="site-footer">
         <a class="brand brand-footer" href="index.html"><span class="brand-mark" aria-hidden="true">♫</span><span>мелодія</span></a>
-        <p>Магазин музичних інструментів</p>
+        <p data-i18n="footerDescription">Магазин музичних інструментів</p>
         <span>© 2026 Мелодія</span>
     </footer>
 </body>
